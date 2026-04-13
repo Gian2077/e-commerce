@@ -1,0 +1,30 @@
+========================================
+BIBLIOTECA JDBC POSTGRESQL
+========================================
+
+Esta pasta contém o driver JDBC do PostgreSQL necessário para conectar
+a aplicação Java ao banco de dados PostgreSQL.
+
+ARQUIVO NECESSÁRIO:
+- postgresql-42.7.2.jar (ou versão mais recente)
+
+ONDE BAIXAR:
+https://jdbc.postgresql.org/download/
+
+INSTRUÇÕES:
+1. Baixe o arquivo JAR do driver PostgreSQL
+2. Coloque o arquivo nesta pasta (lib/)
+3. O nome do arquivo deve ser: postgresql-42.7.2.jar
+   (ou ajuste o nome nas instruções de compilação)
+
+VERIFICAÇÃO:
+Após colocar o arquivo aqui, a estrutura deve ser:
+lib/
+└── postgresql-42.7.2.jar
+
+IMPORTANTE:
+- Não renomeie o arquivo JAR
+- Certifique-se de que o arquivo não está corrompido
+- Use a versão 42.x ou superior para compatibilidade com Java 17+
+
+========================================
