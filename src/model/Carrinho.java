@@ -60,14 +60,14 @@ public class Carrinho {
     @Override
     public String toString() {
         if (itens.isEmpty()) {
-            return "  Carrinho vazio.";
+            return "Carrinho vazio.";
         }
         StringBuilder sb = new StringBuilder();
         sb.append("  === CARRINHO DE COMPRAS ===\n");
         for (ItemCarrinho item : itens) {
             sb.append(item.toString()).append("\n");
         }
-        sb.append(String.format("  --- TOTAL: R$ %.2f ---", calcularTotal()));
+        sb.append(String.format("--- TOTAL: R$ %.2f ---", calcularTotal()));
         return sb.toString();
     }
 }

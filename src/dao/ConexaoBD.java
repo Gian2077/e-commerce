@@ -36,7 +36,7 @@ public class ConexaoBD {
      * Senha do banco de dados.
      * IMPORTANTE: Altere conforme suas configurações locais.
      */
-    private static final String PASSWORD = "postgres";
+    private static final String PASSWORD = "root";
     
     /**
      * Instância única da conexão (Singleton).

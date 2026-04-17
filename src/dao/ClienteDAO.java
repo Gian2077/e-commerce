@@ -21,7 +21,7 @@ import java.util.List;
  * @author Professores POO + BD
  * @version 1.0
  */
-public class UsuarioDAO {
+public class ClienteDAO {
     
     /**
      * Insere um novo usuário no banco de dados.

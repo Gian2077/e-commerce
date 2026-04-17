@@ -39,7 +39,7 @@ public class MenuUtil {
     public static void exibirCabecalho() {
         limparTela();
         System.out.println("========================================");
-        System.out.println("    SISTEMA DE GERENCIAMENTO");
+        System.out.println("    SISTEMA DE E-COMMERCE");
         System.out.println("    Projeto Integrado POO + BD");
         System.out.println("========================================");
         System.out.println();
@@ -52,12 +52,16 @@ public class MenuUtil {
         System.out.println("========================================");
         System.out.println("           MENU PRINCIPAL");
         System.out.println("========================================");
-        System.out.println("1. Listar todos os usuários");
-        System.out.println("2. Buscar usuário por ID");
-        System.out.println("3. Cadastrar novo usuário");
-        System.out.println("4. Atualizar usuário");
-        System.out.println("5. Excluir usuário");
-        System.out.println("0. Sair");
+        System.out.println("  1 - Cadastrar Produto");
+        System.out.println("  2 - Listar Produtos");
+        System.out.println("  3 - Cadastrar Cliente");
+        System.out.println("  4 - Listar Clientes");
+        System.out.println("  5 - Adicionar Produto ao Carrinho");
+        System.out.println("  6 - Ver Carrinho");
+        System.out.println("  7 - Criar Pedido");
+        System.out.println("  8 - Finalizar Compra");
+        System.out.println("  9 - Listar Pedidos");
+        System.out.println("  0 - Sair");
         System.out.println("========================================");
     }
     

@@ -1,5 +1,5 @@
 import dao.ConexaoBD;
-import dao.UsuarioDAO;
+import dao.ClienteDAO;
 import model.Usuario;
 import util.MenuUtil;
 
@@ -26,7 +26,7 @@ public class Main {
     /**
      * DAO para operações com usuários.
      */
-    private static UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private static ClienteDAO clienteDAO = new ClienteDAO();
     
     /**
      * Método principal que inicia a aplicação.
@@ -58,19 +58,19 @@ public class Main {
             
             switch (opcao) {
                 case 1:
-                    listarUsuarios();
+                    listarClientes();
                     break;
                 case 2:
-                    buscarUsuario();
+                    buscarCliente();
                     break;
                 case 3:
-                    cadastrarUsuario();
+                    cadastrarCliente();
                     break;
                 case 4:
-                    atualizarUsuario();
+                    atualizarCliente();
                     break;
                 case 5:
-                    excluirUsuario();
+                    excluirCliente();
                     break;
                 case 0:
                     continuar = false;
@@ -86,15 +86,15 @@ public class Main {
     /**
      * Lista todos os usuários cadastrados no sistema.
      */
-    private static void listarUsuarios() {
-        MenuUtil.exibirTitulo("Listar Usuários");
+    private static void listarClientes() {
+        MenuUtil.exibirTitulo("Listar Clientes");
         
-        List<Usuario> usuarios = usuarioDAO.listarTodos();
+        List<Usuario> usuarios = clienteDAO.listarTodos();
         
         if (usuarios.isEmpty()) {
-            MenuUtil.exibirAviso("Nenhum usuário cadastrado no sistema.");
+            MenuUtil.exibirAviso("Nenhum cliente cadastrado no sistema.");
         } else {
-            System.out.println("Total de usuários: " + usuarios.size());
+            System.out.println("Total de clientes: " + usuarios.size());
             System.out.println();
             
             // Exibe cabeçalho da tabela
@@ -102,7 +102,7 @@ public class Main {
                 "ID", "Nome", "Email", "Telefone");
             MenuUtil.exibirSeparador();
             
-            // Exibe cada usuário
+            // Exibe cada cliente
             for (Usuario u : usuarios) {
                 System.out.printf("%-5d %-25s %-30s %-15s%n",
                     u.getId(),
@@ -118,52 +118,52 @@ public class Main {
     }
     
     /**
-     * Busca um usuário específico pelo ID.
+     * Busca um cliente específico pelo ID.
      */
-    private static void buscarUsuario() {
+    private static void buscarCliente() {
         MenuUtil.exibirTitulo("Buscar Usuário");
         
-        int id = MenuUtil.lerIntPositivo("Digite o ID do usuário: ");
+        int id = MenuUtil.lerIntPositivo("Digite o ID do cliente: ");
         
-        Usuario usuario = usuarioDAO.buscarPorId(id);
+        Usuario usuario = clienteDAO.buscarPorId(id);
         
         if (usuario != null) {
             System.out.println();
             usuario.exibirDetalhes();
         } else {
-            MenuUtil.exibirAviso("Usuário não encontrado com o ID: " + id);
+            MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
         }
         
         MenuUtil.pausar();
     }
     
     /**
-     * Cadastra um novo usuário no sistema.
+     * Cadastra um novo cliente no sistema.
      */
-    private static void cadastrarUsuario() {
-        MenuUtil.exibirTitulo("Cadastrar Novo Usuário");
+    private static void cadastrarCliente() {
+        MenuUtil.exibirTitulo("Cadastrar Novo Cliente");
         
-        // Coleta os dados do usuário
+        // Coleta os dados do cliente
         String nome = MenuUtil.lerStringNaoVazia("Nome completo: ");
         String email = MenuUtil.lerStringNaoVazia("Email: ");
         String telefone = MenuUtil.lerStringNaoVazia("Telefone: ");
         
-        // Cria o objeto Usuario
+        // Cria o objeto Cliente
         Usuario usuario = new Usuario(nome, email, telefone);
         
         // Exibe resumo e solicita confirmação
         System.out.println();
-        System.out.println("Resumo do usuário:");
+        System.out.println("Resumo do Cliente:");
         System.out.println("  Nome: " + usuario.getNome());
         System.out.println("  Email: " + usuario.getEmail());
         System.out.println("  Telefone: " + usuario.getTelefone());
         System.out.println();
         
         if (MenuUtil.confirmar("Confirma o cadastro?")) {
-            if (usuarioDAO.inserir(usuario)) {
-                MenuUtil.exibirSucesso("Usuário cadastrado com sucesso! ID: " + usuario.getId());
+            if (clienteDAO.inserir(usuario)) {
+                MenuUtil.exibirSucesso("Cliente cadastrado com sucesso! ID: " + usuario.getId());
             } else {
-                MenuUtil.exibirErro("Erro ao cadastrar usuário.");
+                MenuUtil.exibirErro("Erro ao cadastrar cliente.");
             }
         } else {
             MenuUtil.exibirAviso("Cadastro cancelado.");
@@ -173,17 +173,17 @@ public class Main {
     }
     
     /**
-     * Atualiza os dados de um usuário existente.
+     * Atualiza os dados de um cliente existente.
      */
-    private static void atualizarUsuario() {
-        MenuUtil.exibirTitulo("Atualizar Usuário");
+    private static void atualizarCliente() {
+        MenuUtil.exibirTitulo("Atualizar Cliente");
         
-        int id = MenuUtil.lerIntPositivo("Digite o ID do usuário a atualizar: ");
+        int id = MenuUtil.lerIntPositivo("Digite o ID do cliente a atualizar: ");
         
-        Usuario usuario = usuarioDAO.buscarPorId(id);
+        Usuario usuario = clienteDAO.buscarPorId(id);
         
         if (usuario == null) {
-            MenuUtil.exibirAviso("Usuário não encontrado com o ID: " + id);
+            MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
             MenuUtil.pausar();
             return;
         }
@@ -220,10 +220,10 @@ public class Main {
         System.out.println();
         
         if (MenuUtil.confirmar("Confirma a atualização?")) {
-            if (usuarioDAO.atualizar(usuario)) {
-                MenuUtil.exibirSucesso("Usuário atualizado com sucesso!");
+            if (clienteDAO.atualizar(usuario)) {
+                MenuUtil.exibirSucesso("Cliente atualizado com sucesso!");
             } else {
-                MenuUtil.exibirErro("Erro ao atualizar usuário.");
+                MenuUtil.exibirErro("Erro ao atualizar cliente.");
             }
         } else {
             MenuUtil.exibirAviso("Atualização cancelada.");
@@ -233,33 +233,33 @@ public class Main {
     }
     
     /**
-     * Exclui um usuário do sistema.
+     * Exclui um cliente do sistema.
      */
-    private static void excluirUsuario() {
-        MenuUtil.exibirTitulo("Excluir Usuário");
+    private static void excluirCliente() {
+        MenuUtil.exibirTitulo("Excluir Cliente");
         
-        int id = MenuUtil.lerIntPositivo("Digite o ID do usuário a excluir: ");
+        int id = MenuUtil.lerIntPositivo("Digite o ID do cliente a excluir: ");
         
-        Usuario usuario = usuarioDAO.buscarPorId(id);
+        Usuario usuario = clienteDAO.buscarPorId(id);
         
         if (usuario == null) {
-            MenuUtil.exibirAviso("Usuário não encontrado com o ID: " + id);
+            MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
             MenuUtil.pausar();
             return;
         }
         
-        // Exibe dados do usuário
+        // Exibe dados do cliente
         System.out.println();
         System.out.println("Usuário a ser excluído:");
         usuario.exibirDetalhes();
         System.out.println();
         
         // Solicita confirmação
-        if (MenuUtil.confirmar("Tem certeza que deseja excluir este usuário?")) {
-            if (usuarioDAO.excluir(id)) {
-                MenuUtil.exibirSucesso("Usuário excluído com sucesso!");
+        if (MenuUtil.confirmar("Tem certeza que deseja excluir este cliente?")) {
+            if (clienteDAO.excluir(id)) {
+                MenuUtil.exibirSucesso("Cliente excluído com sucesso!");
             } else {
-                MenuUtil.exibirErro("Erro ao excluir usuário.");
+                MenuUtil.exibirErro("Erro ao excluir cliente.");
             }
         } else {
             MenuUtil.exibirAviso("Exclusão cancelada.");
