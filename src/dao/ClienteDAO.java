@@ -1,6 +1,6 @@
 package dao;
 
-import model.Usuario;
+import model.Cliente;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,52 +24,53 @@ import java.util.List;
 public class ClienteDAO {
     
     /**
-     * Insere um novo usuário no banco de dados.
+     * Insere um novo cliente no banco de dados.
      * 
      * O ID do usuário é gerado automaticamente pelo banco (SERIAL).
      * Após a inserção, o ID gerado é atribuído ao objeto usuario.
      * 
-     * @param usuario Objeto Usuario a ser inserido
+     * @param cliente Objeto Cliente a ser inserido
      * @return true se a inserção foi bem-sucedida, false caso contrário
      */
-    public boolean inserir(Usuario usuario) {
-        String sql = "INSERT INTO usuario (nome, email, telefone) VALUES (?, ?, ?)";
+    public boolean inserir(Cliente cliente) {
+        String sql = "INSERT INTO cliente (nome, email, cpf, endereco) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-            stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getEmail());
-            stmt.setString(3, usuario.getTelefone());
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getEmail());
+            stmt.setString(3, cliente.getCpf());
+            stmt.setString(4, cliente.getEndereco());
             
             int linhasAfetadas = stmt.executeUpdate();
             
             if (linhasAfetadas > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     if (rs.next()) {
-                        usuario.setId(rs.getInt(1));
+                        cliente.setId(rs.getInt(1));
                     }
                 }
-                System.out.println("✓ Usuário inserido com sucesso! ID: " + usuario.getId());
+                System.out.println("✓ Cliente inserido com sucesso! ID: " + cliente.getId());
                 return true;
             }
             
             return false;
             
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao inserir usuário: " + e.getMessage());
+            System.err.println("✗ Erro ao inserir cliente: " + e.getMessage());
             return false;
         }
     }
     
     /**
-     * Busca um usuário pelo ID.
+     * Busca um cliente pelo ID.
      * 
-     * @param id ID do usuário a ser buscado
-     * @return Objeto Usuario se encontrado, null caso contrário
+     * @param id ID do cliente a ser buscado
+     * @return Objeto Cliente se encontrado, null caso contrário
      */
-    public Usuario buscarPorId(int id) {
-        String sql = "SELECT * FROM usuario WHERE id = ?";
+    public Cliente buscarPorId(int id) {
+        String sql = "SELECT * FROM cliente WHERE id = ?";
         
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -78,7 +79,7 @@ public class ClienteDAO {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return extrairUsuarioDoResultSet(rs);
+                    return extrairClienteDoResultSet(rs);
                 }
             }
             
@@ -94,68 +95,69 @@ public class ClienteDAO {
      * 
      * @return Lista de usuários (vazia se não houver usuários)
      */
-    public List<Usuario> listarTodos() {
-        List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT * FROM usuario ORDER BY nome";
+    public List<Cliente> listarTodos() {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM cliente ORDER BY nome";
         
         try (Connection conn = ConexaoBD.getConexao();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
-                usuarios.add(extrairUsuarioDoResultSet(rs));
+                clientes.add(extrairClienteDoResultSet(rs));
             }
             
-            System.out.println("✓ " + usuarios.size() + " usuário(s) encontrado(s)");
+            System.out.println("✓ " + clientes.size() + " cliente(s) encontrado(s)");
             
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao listar usuários: " + e.getMessage());
+            System.err.println("✗ Erro ao listar clientes: " + e.getMessage());
         }
         
-        return usuarios;
+        return clientes;
     }
     
     /**
-     * Atualiza os dados de um usuário existente.
+     * Atualiza os dados de um cliente existente.
      * 
-     * @param usuario Objeto Usuario com os dados atualizados
+     * @param cliente Objeto Cliente com os dados atualizados
      * @return true se a atualização foi bem-sucedida, false caso contrário
      */
-    public boolean atualizar(Usuario usuario) {
-        String sql = "UPDATE usuario SET nome = ?, email = ?, telefone = ? WHERE id = ?";
+    public boolean atualizar(Cliente cliente) {
+        String sql = "UPDATE cliente SET nome = ?, email = ?, cpf = ?, endereco = ?, WHERE id = ?";
         
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getEmail());
-            stmt.setString(3, usuario.getTelefone());
-            stmt.setInt(4, usuario.getId());
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getEmail());
+            stmt.setString(3, cliente.getCpf());
+            stmt.setString(4, cliente.getEndereco());
+            stmt.setInt(5, cliente.getId());
             
             int linhasAfetadas = stmt.executeUpdate();
             
             if (linhasAfetadas > 0) {
-                System.out.println("✓ Usuário atualizado com sucesso!");
+                System.out.println("✓ Cliente atualizado com sucesso!");
                 return true;
             } else {
-                System.out.println("⚠ Nenhum usuário encontrado com o ID: " + usuario.getId());
+                System.out.println("⚠ Nenhum cliente encontrado com o ID: " + cliente.getId());
                 return false;
             }
             
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao atualizar usuário: " + e.getMessage());
+            System.err.println("✗ Erro ao atualizar cliente: " + e.getMessage());
             return false;
         }
     }
     
     /**
-     * Exclui um usuário do banco de dados.
+     * Exclui um cliente do banco de dados.
      * 
-     * @param id ID do usuário a ser excluído
+     * @param id ID do cliente a ser excluído
      * @return true se a exclusão foi bem-sucedida, false caso contrário
      */
     public boolean excluir(int id) {
-        String sql = "DELETE FROM usuario WHERE id = ?";
+        String sql = "DELETE FROM cliente WHERE id = ?";
         
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -165,28 +167,28 @@ public class ClienteDAO {
             int linhasAfetadas = stmt.executeUpdate();
             
             if (linhasAfetadas > 0) {
-                System.out.println("✓ Usuário excluído com sucesso!");
+                System.out.println("✓ Cliente excluído com sucesso!");
                 return true;
             } else {
-                System.out.println("⚠ Nenhum usuário encontrado com o ID: " + id);
+                System.out.println("⚠ Nenhum cliente encontrado com o ID: " + id);
                 return false;
             }
             
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao excluir usuário: " + e.getMessage());
+            System.err.println("✗ Erro ao excluir cliente: " + e.getMessage());
             return false;
         }
     }
     
     /**
-     * Busca usuários por nome (busca parcial, case-insensitive).
+     * Busca clientes por nome (busca parcial, case-insensitive).
      * 
      * @param nome Nome ou parte do nome do usuário
-     * @return Lista de usuários encontrados
+     * @return Lista de clientes encontrados
      */
-    public List<Usuario> buscarPorNome(String nome) {
-        List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT * FROM usuario WHERE LOWER(nome) LIKE LOWER(?) ORDER BY nome";
+    public List<Cliente> buscarPorNome(String nome) {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM cliente WHERE LOWER(nome) LIKE LOWER(?) ORDER BY nome";
         
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -195,26 +197,26 @@ public class ClienteDAO {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    usuarios.add(extrairUsuarioDoResultSet(rs));
+                    clientes.add(extrairClienteDoResultSet(rs));
                 }
             }
             
-            System.out.println("✓ " + usuarios.size() + " usuário(s) encontrado(s) com o nome '" + nome + "'");
+            System.out.println("✓ " + clientes.size() + " clientes(s) encontrado(s) com o nome '" + nome + "'");
             
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao buscar usuários por nome: " + e.getMessage());
+            System.err.println("✗ Erro ao buscar clientes por nome: " + e.getMessage());
         }
         
-        return usuarios;
+        return clientes;
     }
     
     /**
-     * Conta o total de usuários cadastrados.
+     * Conta o total de clientes cadastrados.
      * 
-     * @return Número total de usuários
+     * @return Número total de clientes
      */
     public int contarTotal() {
-        String sql = "SELECT COUNT(*) FROM usuario";
+        String sql = "SELECT COUNT(*) FROM cliente";
         
         try (Connection conn = ConexaoBD.getConexao();
              Statement stmt = conn.createStatement();
@@ -225,33 +227,34 @@ public class ClienteDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao contar usuários: " + e.getMessage());
+            System.err.println("✗ Erro ao contar cliente: " + e.getMessage());
         }
         
         return 0;
     }
     
     /**
-     * Método auxiliar para extrair um objeto Usuario de um ResultSet.
+     * Método auxiliar para extrair um objeto Cliente de um ResultSet.
      * 
      * @param rs ResultSet contendo os dados do usuário
-     * @return Objeto Usuario com os dados extraídos
+     * @return Objeto Cliente com os dados extraídos
      * @throws SQLException se houver erro ao acessar os dados
      */
-    private Usuario extrairUsuarioDoResultSet(ResultSet rs) throws SQLException {
-        Usuario usuario = new Usuario();
-        usuario.setId(rs.getInt("id"));
-        usuario.setNome(rs.getString("nome"));
-        usuario.setEmail(rs.getString("email"));
-        usuario.setTelefone(rs.getString("telefone"));
-        return usuario;
+    private Cliente extrairClienteDoResultSet(ResultSet rs) throws SQLException {
+        Cliente cliente = new Cliente();
+        cliente.setId(rs.getInt("id"));
+        cliente.setNome(rs.getString("nome"));
+        cliente.setEmail(rs.getString("email"));
+        cliente.setCpf(rs.getString("cpf"));
+        cliente.setEndereco(rs.getString("endereco"));
+        return cliente;
     }
     
     /**
-     * Verifica se existe um usuário com o ID especificado.
+     * Verifica se existe um cliente com o ID especificado.
      * 
-     * @param id ID do usuário
-     * @return true se o usuário existe, false caso contrário
+     * @param id ID do cliente
+     * @return true se o cliente existe, false caso contrário
      */
     public boolean existe(int id) {
         return buscarPorId(id) != null;

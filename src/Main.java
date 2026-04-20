@@ -1,6 +1,6 @@
 import dao.ConexaoBD;
 import dao.ClienteDAO;
-import model.Usuario;
+import model.Cliente;
 import util.MenuUtil;
 
 import java.util.List;
@@ -89,12 +89,12 @@ public class Main {
     private static void listarClientes() {
         MenuUtil.exibirTitulo("Listar Clientes");
         
-        List<Usuario> usuarios = clienteDAO.listarTodos();
+        List<Cliente> clientes = clienteDAO.listarTodos();
         
-        if (usuarios.isEmpty()) {
+        if (clientes.isEmpty()) {
             MenuUtil.exibirAviso("Nenhum cliente cadastrado no sistema.");
         } else {
-            System.out.println("Total de clientes: " + usuarios.size());
+            System.out.println("Total de clientes: " + clientes.size());
             System.out.println();
             
             // Exibe cabeçalho da tabela
@@ -103,12 +103,12 @@ public class Main {
             MenuUtil.exibirSeparador();
             
             // Exibe cada cliente
-            for (Usuario u : usuarios) {
-                System.out.printf("%-5d %-25s %-30s %-15s%n",
-                    u.getId(),
-                    truncar(u.getNome(), 25),
-                    truncar(u.getEmail(), 30),
-                    u.getTelefone()
+            for (Cliente c : clientes) {
+                System.out.printf("%-5d %-25s %-30s %-11s%n",
+                    c.getId(),
+                    truncar(c.getNome(), 25),
+                    truncar(c.getEmail(), 30),
+                    c.getCpf()
                 );
             }
         }
@@ -125,11 +125,11 @@ public class Main {
         
         int id = MenuUtil.lerIntPositivo("Digite o ID do cliente: ");
         
-        Usuario usuario = clienteDAO.buscarPorId(id);
+        Cliente cliente = clienteDAO.buscarPorId(id);
         
-        if (usuario != null) {
+        if (cliente != null) {
             System.out.println();
-            usuario.exibirDetalhes();
+            cliente.exibirDetalhes();
         } else {
             MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
         }
@@ -146,22 +146,24 @@ public class Main {
         // Coleta os dados do cliente
         String nome = MenuUtil.lerStringNaoVazia("Nome completo: ");
         String email = MenuUtil.lerStringNaoVazia("Email: ");
-        String telefone = MenuUtil.lerStringNaoVazia("Telefone: ");
+        String cpf = MenuUtil.lerStringNaoVazia("CPF: ");
+        String endereco = MenuUtil.lerStringNaoVazia("Endereço: ");
         
         // Cria o objeto Cliente
-        Usuario usuario = new Usuario(nome, email, telefone);
+        Cliente cliente = new Cliente(nome, email, cpf, endereco);
         
         // Exibe resumo e solicita confirmação
         System.out.println();
         System.out.println("Resumo do Cliente:");
-        System.out.println("  Nome: " + usuario.getNome());
-        System.out.println("  Email: " + usuario.getEmail());
-        System.out.println("  Telefone: " + usuario.getTelefone());
+        System.out.println("  Nome: " + cliente.getNome());
+        System.out.println("  Email: " + cliente.getEmail());
+        System.out.println("  CPF: " + cliente.getCpf());
+        System.out.println("  Endereço: " + cliente.getEndereco());
         System.out.println();
         
         if (MenuUtil.confirmar("Confirma o cadastro?")) {
-            if (clienteDAO.inserir(usuario)) {
-                MenuUtil.exibirSucesso("Cliente cadastrado com sucesso! ID: " + usuario.getId());
+            if (clienteDAO.inserir(cliente)) {
+                MenuUtil.exibirSucesso("Cliente cadastrado com sucesso! ID: " + cliente.getId());
             } else {
                 MenuUtil.exibirErro("Erro ao cadastrar cliente.");
             }
@@ -180,9 +182,9 @@ public class Main {
         
         int id = MenuUtil.lerIntPositivo("Digite o ID do cliente a atualizar: ");
         
-        Usuario usuario = clienteDAO.buscarPorId(id);
+        Cliente cliente = clienteDAO.buscarPorId(id);
         
-        if (usuario == null) {
+        if (cliente == null) {
             MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
             MenuUtil.pausar();
             return;
@@ -191,36 +193,41 @@ public class Main {
         // Exibe dados atuais
         System.out.println();
         System.out.println("Dados atuais:");
-        usuario.exibirDetalhes();
+        cliente.exibirDetalhes();
         System.out.println();
         
         // Solicita novos dados (permite manter os atuais pressionando ENTER)
         System.out.println("Digite os novos dados (pressione ENTER para manter o valor atual):");
         System.out.println();
         
-        String nome = MenuUtil.lerString("Nome [" + usuario.getNome() + "]: ");
+        String nome = MenuUtil.lerString("Nome [" + cliente.getNome() + "]: ");
         if (!nome.isEmpty()) {
-            usuario.setNome(nome);
+            cliente.setNome(nome);
         }
         
-        String email = MenuUtil.lerString("Email [" + usuario.getEmail() + "]: ");
+        String email = MenuUtil.lerString("Email [" + cliente.getEmail() + "]: ");
         if (!email.isEmpty()) {
-            usuario.setEmail(email);
+            cliente.setEmail(email);
         }
         
-        String telefone = MenuUtil.lerString("Telefone [" + usuario.getTelefone() + "]: ");
-        if (!telefone.isEmpty()) {
-            usuario.setTelefone(telefone);
+        String cpf = MenuUtil.lerString("CPF [" + cliente.getCpf() + "]: ");
+        if (!cpf.isEmpty()) {
+            cliente.setCpf(cpf);
+        }
+
+        String endereco = MenuUtil.lerString("Endereço [" + cliente.getEndereco() + "]: ");
+        if (!endereco.isEmpty()) {
+            cliente.setEndereco(endereco);
         }
         
         // Exibe resumo e solicita confirmação
         System.out.println();
         System.out.println("Novos dados:");
-        usuario.exibirDetalhes();
+        cliente.exibirDetalhes();
         System.out.println();
         
         if (MenuUtil.confirmar("Confirma a atualização?")) {
-            if (clienteDAO.atualizar(usuario)) {
+            if (clienteDAO.atualizar(cliente)) {
                 MenuUtil.exibirSucesso("Cliente atualizado com sucesso!");
             } else {
                 MenuUtil.exibirErro("Erro ao atualizar cliente.");
@@ -240,9 +247,9 @@ public class Main {
         
         int id = MenuUtil.lerIntPositivo("Digite o ID do cliente a excluir: ");
         
-        Usuario usuario = clienteDAO.buscarPorId(id);
+        Cliente cliente = clienteDAO.buscarPorId(id);
         
-        if (usuario == null) {
+        if (cliente == null) {
             MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
             MenuUtil.pausar();
             return;
@@ -250,8 +257,8 @@ public class Main {
         
         // Exibe dados do cliente
         System.out.println();
-        System.out.println("Usuário a ser excluído:");
-        usuario.exibirDetalhes();
+        System.out.println("Cliente a ser excluído:");
+        cliente.exibirDetalhes();
         System.out.println();
         
         // Solicita confirmação

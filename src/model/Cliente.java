@@ -9,6 +9,13 @@ public class Cliente {
 
     public Cliente() {}
 
+    public Cliente(String nome, String email, String cpf, String endereco) {
+        setNome(nome);
+        setEmail(email);
+        setCpf(cpf);
+        setEndereco(endereco);
+    }
+
     public Cliente(int id, String nome, String email, String cpf, String endereco) {
         this.id = id;
         setNome(nome);
@@ -50,6 +57,18 @@ public class Cliente {
             throw new IllegalArgumentException("Endereço não pode ser vazio.");
         }
         this.endereco = endereco.trim();
+    }
+
+    public void exibirDetalhes() {
+        System.out.println("========================================");
+        System.out.println("           DETALHES DO USUÁRIO");
+        System.out.println("========================================");
+        System.out.println("ID: " + id);
+        System.out.println("Nome: " + nome);
+        System.out.println("Email: " + email);
+        System.out.println("CPF: " + cpf);
+        System.out.println("Endereço: " + endereco);
+        System.out.println("========================================");
     }
 
     @Override
