@@ -40,8 +40,8 @@ public class ProdutoDAO {
 
             stmt.setString(1, produto.getNome());
             stmt.setString(2, produto.getDescricao());
-            stmt.setString(3, String.valueOf(produto.getPreco()));
-            stmt.setString(4, String.valueOf(produto.getQuantidadeEstoque()));
+            stmt.setDouble(3, produto.getPreco());
+            stmt.setInt(4, produto.getQuantidadeEstoque());
 
             int linhasAfetadas = stmt.executeUpdate();
 

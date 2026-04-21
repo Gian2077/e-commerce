@@ -1,5 +1,6 @@
 import dao.ConexaoBD;
 import dao.ClienteDAO;
+import dao.ProdutoDAO;
 import model.Cliente;
 import model.Produto;
 import util.MenuUtil;
@@ -25,9 +26,14 @@ import java.util.List;
 public class Main {
 
     /**
-     * DAO para operações com usuários.
+     * DAO para operações com clientes.
      */
     private static ClienteDAO clienteDAO = new ClienteDAO();
+
+    /**
+     * DAO para operações com produtos.
+     */
+    private static ProdutoDAO produtoDAO = new ProdutoDAO();
 
     /**
      * Método principal que inicia a aplicação.
@@ -71,19 +77,19 @@ public class Main {
                     listarClientes();
                     break;
                 case 5:
-                    adicionarProdutoCarrinho();
+                    //adicionarProdutoCarrinho();
                     break;
                 case 6:
-                    verCarrinho();
+                    //verCarrinho();
                     break;
                 case 7:
-                    criarPedido();
+                    //criarPedido();
                     break;
                 case 8:
-                    finalizarCompra();
+                    //finalizarCompra();
                     break;
                 case 9:
-                    listarPedidos();
+                    //listarPedidos();
                     break;
                 case 0:
                     continuar = false;
@@ -97,7 +103,7 @@ public class Main {
     }
 
     /**
-     * Cadastra um novo cliente no sistema.
+     * Cadastra um novo produto no sistema.
      */
     private static void cadastrarProduto() {
         MenuUtil.exibirTitulo("Cadastrar Novo Produto");
@@ -130,6 +136,41 @@ public class Main {
             MenuUtil.exibirAviso("Cadastro cancelado.");
         }
 
+        MenuUtil.pausar();
+    }
+
+    /**
+     * Lista todos os produtos cadastrados no sistema.
+     */
+    private static void listarProdutos() {
+        MenuUtil.exibirTitulo("Listar Produtos");
+
+        List<Produto> produtos = produtoDAO.listarTodos();
+
+        if (produtos.isEmpty()) {
+            MenuUtil.exibirAviso("Nenhum produto cadastrado no sistema.");
+        } else {
+            System.out.println("Total de produtos: " + produtos.size());
+            System.out.println();
+
+            // Exibe cabeçalho da tabela
+            System.out.printf("%-5s %-30s %-30s %-11s %-30s%n",
+                    "ID", "Nome", "Descrição", "Preço", "Quantidade em Estoque");
+            MenuUtil.exibirSeparador();
+
+            // Exibe cada cliente
+            for (Produto p : produtos) {
+                System.out.printf("%-5d %-30s %-30s %-10.2f %-3d%n",
+                        p.getId(),
+                        truncar(p.getNome(), 30),
+                        truncar(p.getDescricao(), 30),
+                        p.getPreco(),
+                        p.getQuantidadeEstoque()
+                );
+            }
+        }
+
+        System.out.println();
         MenuUtil.pausar();
     }
 
@@ -171,7 +212,7 @@ public class Main {
     }
 
     /**
-     * Lista todos os usuários cadastrados no sistema.
+     * Lista todos os clientes cadastrados no sistema.
      */
     private static void listarClientes() {
         MenuUtil.exibirTitulo("Listar Clientes");
