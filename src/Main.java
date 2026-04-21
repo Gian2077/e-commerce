@@ -5,6 +5,7 @@ import model.Cliente;
 import model.Produto;
 import util.MenuUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +35,9 @@ public class Main {
      * DAO para operações com produtos.
      */
     private static ProdutoDAO produtoDAO = new ProdutoDAO();
+
+//    Carrinho
+    private static ArrayList<Produto> carrinho = new ArrayList<>();
 
     /**
      * Método principal que inicia a aplicação.
@@ -77,13 +81,13 @@ public class Main {
                     listarClientes();
                     break;
                 case 5:
-                    //adicionarProdutoCarrinho();
+                    adicionarProdutoCarrinho();
                     break;
                 case 6:
-                    //verCarrinho();
+                    verCarrinho();
                     break;
                 case 7:
-                    //criarPedido();
+                    criarPedido();
                     break;
                 case 8:
                     //finalizarCompra();
@@ -364,6 +368,62 @@ public class Main {
             MenuUtil.exibirAviso("Exclusão cancelada.");
         }
 
+        MenuUtil.pausar();
+    }
+
+//    Adiciona Produtos ao Carrinho
+    private static void adicionarProdutoCarrinho() {
+        listarProdutos();
+        MenuUtil.exibirTitulo("Escolher Produto(s)");
+        int produto;
+        do {
+            produto = MenuUtil.lerOpcao("Escolha o produto pelo seu ID: ");
+            Produto p = produtoDAO.buscarPorId(produto);
+            if (p != null) {
+                // Exibe resumo e solicita confirmação
+                System.out.println();
+                System.out.println("Informações do produto:");
+                System.out.println("  Nome: " + p.getNome());
+                System.out.println("  Descrição: " + p.getDescricao());
+                System.out.println("  Preço: " + p.getPreco());
+                System.out.println("  Endereço: " + p.getQuantidadeEstoque());
+                System.out.println();
+                if (MenuUtil.confirmar("Confirma a escolha?")) {
+                    carrinho.add(p);
+                    MenuUtil.exibirSucesso(p.getNome() + " adicionado ao carrinho com sucesso!");
+                } else {
+                    MenuUtil.exibirErro("Erro ao incluir produto no carrinho.");
+                }
+            }
+            MenuUtil.pausar();
+        } while (produto != 0);
+    }
+
+    /**
+     * Lista Produtos no Carrinho de Compras
+     */
+    private static void verCarrinho() {
+        MenuUtil.exibirTitulo("Carrinho de Compras");
+        for (Produto produto : carrinho) {
+            System.out.println(produto.getNome());
+        }
+        MenuUtil.pausar();
+    }
+
+    /**
+     * Cria um novo Pedido
+     */
+
+    private static void criarPedido() {
+        MenuUtil.exibirTitulo("Resumo do Pedido");
+        for (Produto produto : carrinho) {
+            System.out.println(produto.getNome());
+        }
+        if (MenuUtil.confirmar("Confirmar Produtos Selecionados?")) {
+            // Cria Pedido no Banco de Dados
+        } else {
+            MenuUtil.exibirAviso("Confirmação do pedido cancelada.");
+        }
         MenuUtil.pausar();
     }
 

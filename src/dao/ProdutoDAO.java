@@ -70,7 +70,7 @@ public class ProdutoDAO {
      * @return Objeto Produto se encontrado, null caso contrário
      */
     public Produto buscarPorId(int id) {
-        String sql = "SELECT * FROM cliente WHERE id = ?";
+        String sql = "SELECT * FROM produto WHERE id = ?";
 
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -84,7 +84,7 @@ public class ProdutoDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("✗ Erro ao buscar usuário: " + e.getMessage());
+            System.err.println("✗ Erro ao buscar produto: " + e.getMessage());
         }
 
         return null;
