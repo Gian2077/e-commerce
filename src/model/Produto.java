@@ -18,6 +18,12 @@ public class Produto {
         setPreco(preco);
         setQuantidadeEstoque(quantidadeEstoque);
     }
+    public Produto (String nome, String descricao, double preco, int quantidadeEstoque) {
+        setNome(nome);
+        setDescricao(descricao);
+        setPreco(preco);
+        setQuantidadeEstoque(quantidadeEstoque);
+    }
 
     // Getters e Setters com validações
     public int getId() { return id; }

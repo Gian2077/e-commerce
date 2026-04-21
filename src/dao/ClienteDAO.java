@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Classe DAO (Data Access Object) para gerenciar operações de banco de dados
- * relacionadas à entidade Usuario.
+ * relacionadas à entidade Cliente.
  * 
  * Esta classe implementa o padrão DAO, separando a lógica de acesso a dados
  * da lógica de negócio. Todas as operações CRUD são implementadas aqui.
@@ -183,7 +183,7 @@ public class ClienteDAO {
     /**
      * Busca clientes por nome (busca parcial, case-insensitive).
      * 
-     * @param nome Nome ou parte do nome do usuário
+     * @param nome Nome ou parte do nome do produto
      * @return Lista de clientes encontrados
      */
     public List<Cliente> buscarPorNome(String nome) {

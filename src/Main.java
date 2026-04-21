@@ -1,6 +1,7 @@
 import dao.ConexaoBD;
 import dao.ClienteDAO;
 import model.Cliente;
+import model.Produto;
 import util.MenuUtil;
 
 import java.util.List;
@@ -58,19 +59,31 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    listarClientes();
+                    cadastrarProduto();
                     break;
                 case 2:
-                    buscarCliente();
+                    listarProdutos();
                     break;
                 case 3:
                     cadastrarCliente();
                     break;
                 case 4:
-                    atualizarCliente();
+                    listarClientes();
                     break;
                 case 5:
-                    excluirCliente();
+                    adicionarProdutoCarrinho();
+                    break;
+                case 6:
+                    verCarrinho();
+                    break;
+                case 7:
+                    criarPedido();
+                    break;
+                case 8:
+                    finalizarCompra();
+                    break;
+                case 9:
+                    listarPedidos();
                     break;
                 case 0:
                     continuar = false;
@@ -81,6 +94,80 @@ public class Main {
                     MenuUtil.pausar();
             }
         }
+    }
+
+    /**
+     * Cadastra um novo cliente no sistema.
+     */
+    private static void cadastrarProduto() {
+        MenuUtil.exibirTitulo("Cadastrar Novo Produto");
+
+        // Coleta os dados do produto
+        String nome = MenuUtil.lerStringNaoVazia("Nome do Produto: ");
+        String descricao = MenuUtil.lerStringNaoVazia("Descrição: ");
+        double preco = MenuUtil.lerDoublePositivo("Preço: ");
+        int qtd = MenuUtil.lerIntPositivo("Quantidade em Estoque: ");
+
+        // Cria o objeto Produto
+        Produto produto = new Produto(nome, descricao, preco, qtd);
+
+        // Exibe resumo e solicita confirmação
+        System.out.println();
+        System.out.println("Resumo do Produto:");
+        System.out.println("  Nome: " + produto.getNome());
+        System.out.println("  Descrição: " + produto.getDescricao());
+        System.out.println("  Preço: " + produto.getPreco());
+        System.out.println("  Quantidade em Estoque: " + produto.getQuantidadeEstoque());
+        System.out.println();
+
+        if (MenuUtil.confirmar("Confirma o cadastro?")) {
+            if (produtoDAO.inserir(produto)) {
+                MenuUtil.exibirSucesso("Produto cadastrado com sucesso! ID: " + produto.getId());
+            } else {
+                MenuUtil.exibirErro("Erro ao cadastrar cliente.");
+            }
+        } else {
+            MenuUtil.exibirAviso("Cadastro cancelado.");
+        }
+
+        MenuUtil.pausar();
+    }
+
+    /**
+     * Cadastra um novo cliente no sistema.
+     */
+    private static void cadastrarCliente() {
+        MenuUtil.exibirTitulo("Cadastrar Novo Cliente");
+
+        // Coleta os dados do cliente
+        String nome = MenuUtil.lerStringNaoVazia("Nome completo: ");
+        String email = MenuUtil.lerStringNaoVazia("Email: ");
+        String cpf = MenuUtil.lerStringNaoVazia("CPF: ");
+        String endereco = MenuUtil.lerStringNaoVazia("Endereço: ");
+
+        // Cria o objeto Cliente
+        Cliente cliente = new Cliente(nome, email, cpf, endereco);
+
+        // Exibe resumo e solicita confirmação
+        System.out.println();
+        System.out.println("Resumo do Cliente:");
+        System.out.println("  Nome: " + cliente.getNome());
+        System.out.println("  Email: " + cliente.getEmail());
+        System.out.println("  CPF: " + cliente.getCpf());
+        System.out.println("  Endereço: " + cliente.getEndereco());
+        System.out.println();
+
+        if (MenuUtil.confirmar("Confirma o cadastro?")) {
+            if (clienteDAO.inserir(cliente)) {
+                MenuUtil.exibirSucesso("Cliente cadastrado com sucesso! ID: " + cliente.getId());
+            } else {
+                MenuUtil.exibirErro("Erro ao cadastrar cliente.");
+            }
+        } else {
+            MenuUtil.exibirAviso("Cadastro cancelado.");
+        }
+
+        MenuUtil.pausar();
     }
 
     /**
@@ -133,43 +220,6 @@ public class Main {
             cliente.exibirDetalhes();
         } else {
             MenuUtil.exibirAviso("Cliente não encontrado com o ID: " + id);
-        }
-
-        MenuUtil.pausar();
-    }
-
-    /**
-     * Cadastra um novo cliente no sistema.
-     */
-    private static void cadastrarCliente() {
-        MenuUtil.exibirTitulo("Cadastrar Novo Cliente");
-
-        // Coleta os dados do cliente
-        String nome = MenuUtil.lerStringNaoVazia("Nome completo: ");
-        String email = MenuUtil.lerStringNaoVazia("Email: ");
-        String cpf = MenuUtil.lerStringNaoVazia("CPF: ");
-        String endereco = MenuUtil.lerStringNaoVazia("Endereço: ");
-
-        // Cria o objeto Cliente
-        Cliente cliente = new Cliente(nome, email, cpf, endereco);
-
-        // Exibe resumo e solicita confirmação
-        System.out.println();
-        System.out.println("Resumo do Cliente:");
-        System.out.println("  Nome: " + cliente.getNome());
-        System.out.println("  Email: " + cliente.getEmail());
-        System.out.println("  CPF: " + cliente.getCpf());
-        System.out.println("  Endereço: " + cliente.getEndereco());
-        System.out.println();
-
-        if (MenuUtil.confirmar("Confirma o cadastro?")) {
-            if (clienteDAO.inserir(cliente)) {
-                MenuUtil.exibirSucesso("Cliente cadastrado com sucesso! ID: " + cliente.getId());
-            } else {
-                MenuUtil.exibirErro("Erro ao cadastrar cliente.");
-            }
-        } else {
-            MenuUtil.exibirAviso("Cadastro cancelado.");
         }
 
         MenuUtil.pausar();
