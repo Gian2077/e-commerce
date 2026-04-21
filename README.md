@@ -9,9 +9,9 @@ e-commerce
 - Vinicius Oliveira dos Santos da Silva, 45571911
 - Gustavo de Matos Santana, 46189718
 ## Objetivos
-Implementar um Sistema de e-commerce para realizar cadastro de usuários (cliente ou administrador) e produtos. Listar os produtos cadastrados, carrinho de compras para gerenciar o pedido e finalização do pedido com um método de pagamento.
+Implementar um Sistema de e-commerce para realizar cadastro de clientes e produtos. Listar os produtos cadastrados, carrinho de compras para gerenciar o pedido e finalização do pedido com um método de pagamento.
 ## Funcionalidades
-- **RF-001:** Cadastro de Usuários (Cliente e Administrador)
+- **RF-001:** Cadastro de Clientes
 - **RF-002:** Cadastro de Produtos (Somente Administrador)
 - **RF-003:** Listar produtos a venda
 - **RF-004:** Carrinho de Compras (Adicionar, alterar quantidade ou remover produtos)

@@ -216,7 +216,7 @@ public class MenuUtil {
      * Exibe uma linha separadora.
      */
     public static void exibirSeparador() {
-        System.out.println("========================================");
+        System.out.println("=".repeat(110));
     }
     
     /**
