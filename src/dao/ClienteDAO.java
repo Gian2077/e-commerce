@@ -27,7 +27,7 @@ public class ClienteDAO {
      * Insere um novo cliente no banco de dados.
      * 
      * O ID do usuário é gerado automaticamente pelo banco (SERIAL).
-     * Após a inserção, o ID gerado é atribuído ao objeto usuario.
+     * Após a inserção, o ID gerado é atribuído ao objeto cliente.
      * 
      * @param cliente Objeto Cliente a ser inserido
      * @return true se a inserção foi bem-sucedida, false caso contrário
