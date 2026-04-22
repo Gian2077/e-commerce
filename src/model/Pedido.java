@@ -45,6 +45,9 @@ public class Pedido {
     public void setPagamento(Pagamento pagamento) { this.pagamento = pagamento; }
 
     public LocalDateTime getDataCriacao() { return dataCriacao; }
+    public void setDataCriacao(LocalDateTime data) {
+        this.dataCriacao = data;
+    }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
