@@ -1,8 +1,5 @@
-import dao.ConexaoBD;
-import dao.ClienteDAO;
-import dao.ProdutoDAO;
-import model.Cliente;
-import model.Produto;
+import dao.*;
+import model.*;
 import util.MenuUtil;
 
 import java.util.ArrayList;

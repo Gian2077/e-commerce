@@ -1,6 +1,7 @@
 package dao;
 
 import dao.ClienteDAO;
+import dao.ItemCarrinhoDAO;
 import model.ItemCarrinho;
 import model.Pedido;
 
@@ -76,14 +77,10 @@ public class PedidoDAO {
         String sql = "INSERT INTO item_pedido (id_pedido, id_produto, quantidade, preco) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (ItemCarrinho item : pedido.getItens()) {
-                stmt.setInt(1, pedido.getId());
-                stmt.setInt(2, item.getProduto().getId());
-                stmt.setInt(3, item.getQuantidade());
-                stmt.setDouble(4, item.getProduto().getPreco());
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
+            ItemCarrinhoDAO itemDAO = new ItemCarrinhoDAO();
+            itemDAO.inserirBatch(conn, pedido.getItens(), pedido.getId());
+        } catch (SQLException e) {
+            System.err.println("✗ Erro ao inserir itens no pedido: " + e.getMessage());
         }
     }
 
