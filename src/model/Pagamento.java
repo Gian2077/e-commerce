@@ -14,6 +14,12 @@ public class Pagamento {
         this.confirmado = false;
     }
 
+    public Pagamento(String formaPagamento) {
+        setFormaPagamento(formaPagamento);
+        this.dataHora = LocalDateTime.now();
+        this.confirmado = false;
+    }
+
     public Pagamento(int id, double valor, String formaPagamento) {
         this.id = id;
         setValor(valor);

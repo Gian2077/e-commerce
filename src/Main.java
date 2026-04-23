@@ -33,11 +33,17 @@ public class Main {
      */
     private static ProdutoDAO produtoDAO = new ProdutoDAO();
 
-//    Carrinho
-    private static ArrayList<Produto> carrinho = new ArrayList<>();
+    //    Carrinho
+    private static List<ItemCarrinho> carrinho = new ArrayList<>();
+
+    //    Pedido
+    private static PedidoDAO pedidoDAO = new PedidoDAO();
+
+    //    Pedido Atual
+    private static Pedido pedidoAtual = null;
 
     /**
-     * Método principal que inicia a aplicação.
+     * Metodo principal que inicia a aplicação.
      *
      * @param args Argumentos da linha de comando (não utilizados)
      */
@@ -87,7 +93,7 @@ public class Main {
                     criarPedido();
                     break;
                 case 8:
-                    //finalizarCompra();
+                    finalizarCompra();
                     break;
                 case 9:
                     //listarPedidos();
@@ -368,32 +374,30 @@ public class Main {
         MenuUtil.pausar();
     }
 
-//    Adiciona Produtos ao Carrinho
+    //    Adiciona Produtos ao Carrinho
     private static void adicionarProdutoCarrinho() {
         listarProdutos();
-        MenuUtil.exibirTitulo("Escolher Produto(s)");
-        int produto;
-        do {
-            produto = MenuUtil.lerOpcao("Escolha o produto pelo seu ID: ");
-            Produto p = produtoDAO.buscarPorId(produto);
-            if (p != null) {
-                // Exibe resumo e solicita confirmação
-                System.out.println();
-                System.out.println("Informações do produto:");
-                System.out.println("  Nome: " + p.getNome());
-                System.out.println("  Descrição: " + p.getDescricao());
-                System.out.println("  Preço: " + p.getPreco());
-                System.out.println("  Endereço: " + p.getQuantidadeEstoque());
-                System.out.println();
-                if (MenuUtil.confirmar("Confirma a escolha?")) {
-                    carrinho.add(p);
-                    MenuUtil.exibirSucesso(p.getNome() + " adicionado ao carrinho com sucesso!");
-                } else {
-                    MenuUtil.exibirErro("Erro ao incluir produto no carrinho.");
-                }
-            }
+        MenuUtil.exibirTitulo("Adicionar Produto ao Carrinho");
+
+        int idProduto = MenuUtil.lerIntPositivo("Digite o ID do produto: ");
+        Produto p = produtoDAO.buscarPorId(idProduto);
+
+        if (p == null) {
+            MenuUtil.exibirErro("Produto não encontrado!");
             MenuUtil.pausar();
-        } while (produto != 0);
+            return;
+        }
+
+        int quantidade = MenuUtil.lerIntPositivo("Quantidade: ");
+
+        ItemCarrinho item = new ItemCarrinho();
+        item.setProduto(p);
+        item.setQuantidade(quantidade);
+
+        carrinho.add(item);
+
+        MenuUtil.exibirSucesso("Produto adicionado ao carrinho!");
+        MenuUtil.pausar();
     }
 
     /**
@@ -401,9 +405,20 @@ public class Main {
      */
     private static void verCarrinho() {
         MenuUtil.exibirTitulo("Carrinho de Compras");
-        for (Produto produto : carrinho) {
-            System.out.println(produto.getNome());
+
+        if (carrinho.isEmpty()) {
+            MenuUtil.exibirAviso("Carrinho vazio.");
+        } else {
+            double total = 0;
+
+            for (ItemCarrinho item : carrinho) {
+                System.out.println(item);
+                total += item.getSubtotal();
+            }
+
+            System.out.println("\nTOTAL: R$ " + total);
         }
+
         MenuUtil.pausar();
     }
 
@@ -412,15 +427,67 @@ public class Main {
      */
 
     private static void criarPedido() {
-        MenuUtil.exibirTitulo("Resumo do Pedido");
-        for (Produto produto : carrinho) {
-            System.out.println(produto.getNome());
+        MenuUtil.exibirTitulo("Criar Pedido");
+
+        if (carrinho.isEmpty()) {
+            MenuUtil.exibirAviso("Carrinho vazio!");
+            MenuUtil.pausar();
+            return;
         }
-        if (MenuUtil.confirmar("Confirmar Produtos Selecionados?")) {
-            // Cria Pedido no Banco de Dados
+
+        listarClientes();
+        int idCliente = MenuUtil.lerIntPositivo("Digite o ID do cliente: ");
+
+        Cliente cliente = clienteDAO.buscarPorId(idCliente);
+
+        if (cliente == null) {
+            MenuUtil.exibirErro("Cliente não encontrado!");
+            MenuUtil.pausar();
+            return;
+        }
+
+        Pedido pedido = new Pedido();
+        pedido.setCliente(cliente);
+        pedido.setItens(new ArrayList<>(carrinho));
+
+        if (MenuUtil.confirmar("Confirmar criação do pedido?")) {
+            if (pedidoDAO.inserir(pedido)) {
+                pedidoAtual = pedido;
+                carrinho.clear();
+
+                MenuUtil.exibirSucesso("Pedido criado com sucesso! ID: " + pedido.getId());
+            } else {
+                MenuUtil.exibirErro("Erro ao criar pedido.");
+            }
         } else {
-            MenuUtil.exibirAviso("Confirmação do pedido cancelada.");
+            MenuUtil.exibirAviso("Criação cancelada.");
         }
+
+        MenuUtil.pausar();
+    }
+
+    private static void finalizarCompra() {
+        MenuUtil.exibirTitulo("Finalizar Compra");
+
+        if (pedidoAtual == null) {
+            MenuUtil.exibirAviso("Nenhum pedido criado!");
+            MenuUtil.pausar();
+            return;
+        }
+
+        String formaPagamento = MenuUtil.lerStringNaoVazia("Forma de pagamento (CARTAO/PIX/DINHEIRO): ");
+
+        Pagamento pagamento = new Pagamento(formaPagamento);
+
+        pedidoAtual.finalizar(pagamento);
+
+        if (pedidoDAO.atualizarStatus(pedidoAtual)) {
+            MenuUtil.exibirSucesso("Compra finalizada com sucesso!");
+            pedidoAtual = null;
+        } else {
+            MenuUtil.exibirErro("Erro ao finalizar compra.");
+        }
+
         MenuUtil.pausar();
     }
 
