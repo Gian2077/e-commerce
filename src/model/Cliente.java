@@ -1,6 +1,6 @@
 package model;
 
-public class Cliente {
+public class Cliente extends Usuario {
     private int id;
     private String nome;
     private String email;
@@ -10,8 +10,7 @@ public class Cliente {
     public Cliente() {}
 
     public Cliente(String nome, String email, String cpf, String endereco) {
-        setNome(nome);
-        setEmail(email);
+        super(nome, email);
         setCpf(cpf);
         setEndereco(endereco);
     }
@@ -59,6 +58,13 @@ public class Cliente {
         this.endereco = endereco.trim();
     }
 
+    @Override
+    public void exibirPermissoes() {
+        System.out.println("Tipo de Usuário: Cliente");
+        System.out.println("Autorização: Adicionar Produtos ao Carrinho, Ver Carrinho, Criar Pedido, Finalizar Compra");
+    }
+
+    @Override
     public void exibirDetalhes() {
         System.out.println("========================================");
         System.out.println("           DETALHES DO USUÁRIO");

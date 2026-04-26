@@ -13,27 +13,10 @@ package model;
  * @author Professores POO + BD
  * @version 1.0
  */
-public class Usuario {
-    
-    /**
-     * Identificador único do usuário (chave primária no banco de dados)
-     */
-    private int id;
-    
-    /**
-     * Nome completo do usuário
-     */
-    private String nome;
-    
-    /**
-     * Email do usuário
-     */
-    private String email;
-    
-    /**
-     * Telefone do usuário
-     */
-    private String telefone;
+public abstract class Usuario {
+    protected int id;
+    protected String nome;
+    protected String email;
     
     /**
      * Construtor padrão (sem parâmetros).
@@ -41,34 +24,14 @@ public class Usuario {
      */
     public Usuario() {
     }
-    
-    /**
-     * Construtor completo com todos os atributos.
-     * 
-     * @param id Identificador único do usuário
-     * @param nome Nome completo do usuário
-     * @param email Email do usuário
-     * @param telefone Telefone do usuário
-     */
-    public Usuario(int id, String nome, String email, String telefone) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
+    public Usuario(String nome, String email) {
+        setNome(nome);
+        setEmail(email);
     }
-    
-    /**
-     * Construtor sem ID (usado ao criar novos usuários).
-     * O ID será gerado automaticamente pelo banco de dados.
-     * 
-     * @param nome Nome completo do usuário
-     * @param email Email do usuário
-     * @param telefone Telefone do usuário
-     */
-    public Usuario(String nome, String email, String telefone) {
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
+    public Usuario(int id, String nome, String email) {
+        setId(id);
+        setNome(nome);
+        setEmail(email);
     }
     
     // ==================== GETTERS E SETTERS ====================
@@ -127,24 +90,6 @@ public class Usuario {
         this.email = email;
     }
     
-    /**
-     * Obtém o telefone do usuário.
-     * 
-     * @return Telefone do usuário
-     */
-    public String getTelefone() {
-        return telefone;
-    }
-    
-    /**
-     * Define o telefone do usuário.
-     * 
-     * @param telefone Telefone do usuário
-     */
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-    
     // ==================== MÉTODOS AUXILIARES ====================
     
     /**
@@ -157,13 +102,13 @@ public class Usuario {
     public String toString() {
         return String.format(
             "Usuario [ID=%d, Nome=%s, Email=%s, Telefone=%s]",
-            id, nome, email, telefone
+            id, nome, email
         );
     }
     
     /**
      * Exibe os dados do usuário de forma detalhada.
-     * Método auxiliar para facilitar a visualização no console.
+     * Metodo auxiliar para facilitar a visualização no console.
      */
     public void exibirDetalhes() {
         System.out.println("========================================");
@@ -172,7 +117,7 @@ public class Usuario {
         System.out.println("ID: " + id);
         System.out.println("Nome: " + nome);
         System.out.println("Email: " + email);
-        System.out.println("Telefone: " + telefone);
         System.out.println("========================================");
     }
+    public abstract void exibirPermissoes();
 }
