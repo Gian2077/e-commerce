@@ -28,6 +28,7 @@ import java.util.List;
 public class PedidoDAO {
 
     private static ClienteDAO clienteDAO = new ClienteDAO();
+    private static ItemCarrinhoDAO itemCarrinhoDAO = new ItemCarrinhoDAO();
 
     /**
      * Insere um novo pedido no banco de dados.
@@ -118,21 +119,16 @@ public class PedidoDAO {
     public List<Pedido> listarTodos() {
         List<Pedido> pedidos = new ArrayList<>();
         String sql = "SELECT * FROM pedido ORDER BY data_criacao DESC";
-
         try (Connection conn = ConexaoBD.getConexao();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
                 pedidos.add(extrairPedidoDoResultSet(rs));
             }
             System.out.println("✓ " + pedidos.size() + " pedido(s) encontrado(s)");
-
-
         } catch (SQLException e) {
             System.err.println("Erro ao listar pedidos: " + e.getMessage());
         }
-
         return pedidos;
     }
 
@@ -217,6 +213,8 @@ public class PedidoDAO {
 //        Set Item Carrinho
         pedido.setDataCriacao(rs.getTimestamp("DATA_CRIACAO").toLocalDateTime());
         pedido.setStatus(rs.getString("STATUS"));
+        List<ItemCarrinho> itens = itemCarrinhoDAO.buscarPorPedido(pedido.getId());
+        pedido.setItens(itens);
         return pedido;
     }
 

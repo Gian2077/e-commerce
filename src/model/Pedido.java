@@ -69,23 +69,19 @@ public class Pedido {
     public String toString() {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         StringBuilder sb = new StringBuilder();
-        sb.append("╔══════════════════════════════════════════════════╗\n");
-        sb.append(String.format("║ PEDIDO #%-5d | Status: %-12s             ║\n", id, status));
-        sb.append(String.format("║ Data: %-43s║\n", dataCriacao.format(fmt)));
-        sb.append(String.format("║ Cliente: %-40s║\n", cliente.getNome()));
-        sb.append("╠══════════════════════════════════════════════════╣\n");
-        sb.append("║ ITENS:                                           ║\n");
+        sb.append(String.format("PEDIDO #%-5d | Status: %-12s\n", id, status));
+        sb.append(String.format("Data: %-43s\n", dataCriacao.format(fmt)));
+        sb.append(String.format("Cliente: %-40s\n", cliente.getNome()));
+        sb.append("ITENS:\n");
         for (ItemCarrinho item : itens) {
-            sb.append(String.format("║ %-49s║\n", item.toString().trim()));
+            sb.append(String.format("%-49s\n", item.toString().trim()));
         }
-        sb.append("╠══════════════════════════════════════════════════╣\n");
-        sb.append(String.format("║ TOTAL: R$ %-39.2f║\n", calcularTotal()));
+        sb.append(String.format("TOTAL: R$ %-39.2f\n", calcularTotal()));
         if (pagamento != null) {
-            sb.append(String.format("║ Pagamento: %-7s | %s              ║\n",
+            sb.append(String.format("Pagamento: %-7s | %s\n",
                     pagamento.getFormaPagamento(),
                     pagamento.isConfirmado() ? "CONFIRMADO" : "PENDENTE"));
         }
-        sb.append("╚══════════════════════════════════════════════════╝");
         return sb.toString();
     }
 }

@@ -2,12 +2,15 @@ package dao;
 
 import model.ItemCarrinho;
 import model.Produto;
+import dao.ProdutoDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemCarrinhoDAO {
+
+    private static ProdutoDAO produtoDAO = new ProdutoDAO();
 
     // Inserir um item
     public boolean inserir(ItemCarrinho item, int idPedido) {
@@ -70,7 +73,7 @@ public class ItemCarrinhoDAO {
 
     //    Atualiza Item, retorna true se bem sucedido, false se algo deu errado
     public boolean atualizar(ItemCarrinho item, int id) {
-        String sql = "UPDATE item_carrinho SET quantidade = ?, preco = ? WHERE id = ?";
+        String sql = "UPDATE item_pedido SET quantidade = ?, preco = ? WHERE id = ?";
 
         try (Connection conn = ConexaoBD.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -106,12 +109,16 @@ public class ItemCarrinhoDAO {
     //    Metodo Auxiliar para extrair item do ResultSet
     private ItemCarrinho extrairItem(ResultSet rs) throws SQLException {
         ItemCarrinho item = new ItemCarrinho();
+        item.setId(rs.getInt("id"));
+        item.setId_pedido(rs.getInt("id_pedido"));
+        item.setId_produto(rs.getInt("id_produto"));
         Produto produto = new Produto();
-        produto.setId(rs.getInt("id_produto"));
+        int produtoId = rs.getInt("id_produto");
+        produto.setId(produtoId);
+        produto.setNome(produtoDAO.buscarPorId(rs.getInt("id_produto")).getNome());
         produto.setPreco(rs.getDouble("preco"));
         item.setProduto(produto);
         item.setQuantidade(rs.getInt("quantidade"));
-
         return item;
     }
 }

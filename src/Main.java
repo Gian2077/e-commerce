@@ -96,7 +96,7 @@ public class Main {
                     finalizarCompra();
                     break;
                 case 9:
-                    //listarPedidos();
+                    listarPedidos();
                     break;
                 case 0:
                     continuar = false;
@@ -488,6 +488,15 @@ public class Main {
             MenuUtil.exibirErro("Erro ao finalizar compra.");
         }
 
+        MenuUtil.pausar();
+    }
+
+    public static void listarPedidos() {
+        MenuUtil.exibirTitulo("Pedidos");
+        List<Pedido> pedidos = pedidoDAO.listarTodos();
+        for (Pedido p : pedidos) {
+            System.out.println(p.toString());
+        }
         MenuUtil.pausar();
     }
 
